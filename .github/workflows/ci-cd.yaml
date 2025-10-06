@@ -13,11 +13,46 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 🔹 DEBUG: confirmar que los secrets existen
+      - name: Check if secrets are set
+        run: |
+          echo "DOCKER_USERNAME is set? ${DOCKER_USERNAME:+yes}"
+          echo "DOCKER_PASSWORD is set? ${DOCKER_PASSWORD:+yes}"
+          echo "DOCKER_REGISTRY is set? ${DOCKER_REGISTRY:+yes}"
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+
+      # 🔹 DEBUG: imprimir longitud de los secrets (no revela el valor)
+      - name: Check secrets length
+        run: |
+          echo "DOCKER_USERNAME length: ${#DOCKER_USERNAME}"
+          echo "DOCKER_PASSWORD length: ${#DOCKER_PASSWORD}"
+          echo "DOCKER_REGISTRY length: ${#DOCKER_REGISTRY}"
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+
+      # 🔹 DEBUG: imprimir hash del password (seguro)
+      - name: Hash Docker password
+        run: echo "${DOCKER_PASSWORD}" | sha256sum
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Log in to Docker registry
-        run: echo '${{ secrets.DOCKER_PASSWORD }}' | docker login ${{ secrets.DOCKER_REGISTRY }} -u '${{ secrets.DOCKER_USERNAME }}' --password-stdin
+        run: echo "${DOCKER_PASSWORD}" | docker login ${{ secrets.DOCKER_REGISTRY }} -u "${DOCKER_USERNAME}" --password-stdin
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
 
       - name: Build and push Docker image
         run: |
-          IMAGE_TAG=${{ secrets.DOCKER_REGISTRY }}/genphenia/genphenia-frontend:${{ github.sha }}
+          IMAGE_TAG=${DOCKER_REGISTRY}/genphenia/genphenia-frontend:${GITHUB_SHA}
           docker build -t $IMAGE_TAG .
           docker push $IMAGE_TAG
+        env:
+          DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+          GITHUB_SHA: ${{ github.sha }}
