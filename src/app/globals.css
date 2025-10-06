@@ -1,0 +1,338 @@
+@import "tailwindcss";
+@import url("/vendor/lucai.scoped.css") layer(vendor);
+/* ============== TOKENS (LUCAI dark) ============== */
+:root{
+  --lu-bg:        #0b0b0b;
+  --lu-text:      #f5f6f7;
+  --lu-subtle:    #cdd3db;
+  --lu-surface:   #111111;
+  --lu-border:    #262626;
+  --lu-accent:    #ff6900;   /* naranja */
+  --lu-amber:     #fcb900;   /* amarillo */
+  --lu-cta-grad:  linear-gradient(135deg,var(--lu-amber) 0%,var(--lu-accent) 100%);
+  --lu-shadow:    0 20px 60px rgba(0,0,0,.35);
+  --lu-radius:    28px;
+  --send-w:       130px;     /* ancho mínimo del botón Send/Enter */
+}
+
+body{ background:var(--lu-bg); color:var(--lu-text); }
+
+/* Cabecera */
+.header-dark{
+  position:sticky; top:0; z-index:20; width:100%;
+  backdrop-filter: blur(8px);
+  background: color-mix(in oklab, #000 60%, transparent);
+  border-bottom: 1px solid var(--lu-border);
+}
+
+/* Fondo hexagonal opcional */
+.hex-bg{
+  position:absolute; inset:0;
+  background:
+    url("/brand/hexagon.png") center / clamp(720px, 70vw, 1200px) no-repeat,
+    var(--lu-bg);
+  opacity:.18; filter:saturate(140%) brightness(.95);
+  pointer-events:none;
+}
+
+/* Panel grande (login/contact) */
+.panel-lg{
+  max-width:980px; margin:0 auto; padding:64px 48px;
+  background:var(--lu-surface);
+  border:1px solid var(--lu-border);
+  border-radius:var(--lu-radius);
+  box-shadow:var(--lu-shadow);
+}
+.kicker{
+  text-align:center; color:var(--lu-subtle); font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase; line-height:1.1;
+  font-size:clamp(28px, 4.2vw, 56px); margin-bottom:40px;
+}
+
+/* ============== Inputs “píldora” ============== */
+.pill-input, .pill-textarea{
+  width:100%; color:var(--lu-text); background:transparent; outline:none;
+  border:2px solid var(--lu-accent); transition: box-shadow .2s ease;
+}
+.pill-input{ height:48px; border-radius:9999px; padding:0 16px; }
+.pill-textarea{ min-height:110px; border-radius:20px; padding:12px 16px; resize:vertical; }
+.pill-input::placeholder, .pill-textarea::placeholder{ color:#9aa3ad; }
+.pill-input:focus, .pill-textarea:focus{
+  box-shadow:0 0 0 3px color-mix(in oklab, var(--lu-accent) 35%, transparent);
+}
+
+/* Evitar autofill blanco/amarillo (Chrome) */
+.pill-input:-webkit-autofill,
+.pill-input:-webkit-autofill:hover,
+.pill-input:-webkit-autofill:focus{
+  -webkit-text-fill-color: var(--lu-text);
+  caret-color: var(--lu-text);
+  box-shadow: 0 0 0px 1000px transparent inset;
+  transition: background-color 9999s ease-out 0s;
+  background-color: transparent !important;
+}
+.pill-input, .pill-input:focus{ background-color:transparent !important; }
+
+/* ============== Botones (override vendor) ============== */
+
+/* Outline común (Send / Enter / AI Chat)  */
+#lucai-app .btn-outline{
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 44px; min-width: var(--send-w); padding: 0 24px;
+  border-radius: 12px; border: 2px solid var(--lu-accent);
+  background: transparent; color: var(--lu-accent);
+  font: inherit; font-weight: 600; cursor: pointer;
+  transition: background-color .2s ease, color .2s ease, transform .06s ease, filter .2s ease;
+}
+#lucai-app .btn-outline:hover{
+  background: var(--lu-accent); color: #111;
+}
+#lucai-app .btn-outline:active{ transform: translateY(1px); }
+
+#lucai-app .btn-enter{ margin-left: auto; }
+
+/* Ojo por defecto (con marco) */
+#lucai-app .eye-btn{
+  all: unset;
+  box-sizing: border-box;
+  position:absolute; right:6px; top:50%; transform:translateY(-50%);
+  width:36px; height:36px; display:grid; place-items:center;
+  cursor:pointer; color:var(--lu-accent);
+  transition: filter .2s ease, transform .06s ease;
+}
+#lucai-app .eye-btn:focus-visible{
+  outline:0; box-shadow:0 0 0 3px color-mix(in oklab, var(--lu-accent) 35%, transparent);
+  border-radius:10px;
+}
+#lucai-app .eye-btn:hover{ filter: brightness(1.15); }
+
+
+#lucai-app .eye-btn.eye-ghost{
+}
+
+#lucai-app .eye-btn:active{ transform:translateY(-50%) scale(.98); }
+#lucai-app .eye-btn:focus-visible{
+  outline:0; box-shadow:0 0 0 3px color-mix(in oklab, var(--lu-accent) 35%, transparent);
+}
+
+/* “Enter” alineado a la derecha en el login (mismo estilo que Send) */
+#lucai-app .btn-enter{ margin-left:auto; }
+
+/* ============== Marca ============== */
+.brand-logo{ width:clamp(160px, 16vw, 220px); height:auto; }
+.brand-sphere{
+  width:clamp(96px, 10vw, 140px); height:auto;
+  filter: drop-shadow(0 12px 30px rgba(255,105,0,.35));
+}
+
+/* Chat: aún más zoom que Home */
+.hex-zoomed--chat{
+  background:
+    url("/brand/hexagon.png") center/5600px no-repeat, /* más grande que 4200 de Home */
+    var(--lu-bg);
+  opacity: .10;
+  filter: saturate(170%) brightness(.9);
+}
+
+/* Botón “Send” solo texto, posicionado como antes */
+#lucai-app .send-text{
+  all: unset;
+  position: absolute;
+  right: 24px;
+  bottom: 18px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  color: var(--lu-accent);
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .2s ease, transform .06s ease, filter .2s ease;
+}
+#lucai-app .send-text:hover{ filter: brightness(1.15); }
+#lucai-app .send-text:active{ transform: translateY(1px); }
+#lucai-app .send-text[disabled]{ opacity:.5; cursor:not-allowed; }
+
+/* ============== Chat ============== */
+.chat-board {
+  background: color-mix(in oklab, var(--lu-bg) 75%, #1b1e20 25%);
+  border: 1px solid color-mix(in oklab, var(--lu-bg) 65%, #2a2e31);
+  border-radius: var(--lu-radius);
+  padding: 22px 28px;
+  height: clamp(560px, 70vh, 880px);
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #2a2b2e transparent;
+  backdrop-filter: blur(4px); 
+}
+.chat-board::-webkit-scrollbar{ width:10px; }
+.chat-board::-webkit-scrollbar-thumb{ background:#2a2b2e; border-radius:10px; }
+
+.chat-thread{ display:flex; flex-direction:column; gap:10px; min-height:220px; }
+.bubble{ max-width:85%; padding:10px 14px; border-radius:16px; line-height:1.55; }
+.bubble-user{ margin-left:auto; background:#171717; border:1px solid var(--lu-border); }
+.bubble-bot{  margin-right:auto; background:#0f1214; border:1px solid #1d2a22; }
+
+.input-dock{
+  position:fixed; left:0; right:0; bottom:0; z-index:20;
+  padding:14px 0 calc(env(safe-area-inset-bottom) + 18px);
+  background:linear-gradient(180deg, rgba(11,11,11,0) 0%, rgba(11,11,11,.92) 40%, rgba(11,11,11,1) 100%);
+  backdrop-filter: blur(6px);
+}
+
+#lucai-app .input-dock form{ position:relative !important; }
+#lucai-app .dock-textarea{ padding-right: calc(var(--send-w) + 12px); }
+
+#lucai-app .send-btn{
+  position:absolute; right:24px; bottom:18px;
+  height:44px; min-width:var(--send-w); z-index:1;
+}
+
+/* ====== Home: fondo hex zoomed-out tipo “wireframe” ====== */
+/* super zoomed-out hex */
+.hex-zoomed {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    url("/brand/hexagon.png") center/4200px no-repeat,
+    var(--lu-bg);
+  opacity: 0.12; 
+  filter: saturate(160%) brightness(0.9);
+}
+
+.hex-zoomed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 80% 30%, rgba(0, 255, 0, 0.08), transparent 70%);
+  mix-blend-mode: screen;
+}
+
+/* ====== Header nav ====== */
+.nav-link{
+  color: var(--lu-subtle);
+  font-weight: 600;
+  letter-spacing: .02em;
+  transition: color .2s ease, opacity .2s ease;
+}
+.nav-link:hover{ color: var(--lu-text); }
+
+/* ====== Hero ====== */
+.hero-grid{
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: clamp(24px, 4vw, 48px);
+  align-items: center;
+}
+@media (max-width: 1024px){
+  .hero-grid{ grid-template-columns: 1fr; }
+}
+.hero-title{
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  font-size: clamp(36px, 6vw, 64px);
+}
+.hero-sub{
+  color: var(--lu-subtle);
+  font-size: clamp(16px, 2.4vw, 18px);
+  max-width: 60ch;
+}
+
+/* versión “full gradiente” ya mencionada en tus notas */
+#lucai-app .btn-cta-block{
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  height: 44px; padding: 0 20px;
+  border-radius: 12px;
+  background: var(--lu-cta-grad);
+  color: #111; font-weight: 700; cursor: pointer;
+  transition: transform .06s ease, filter .2s ease;
+}
+#lucai-app .btn-cta-block:hover{ filter: brightness(1.02); }
+#lucai-app .btn-cta-block:active{ transform: translateY(1px); }
+
+/* esfera grande (lado derecho del hero) */
+.brand-sphere-large{
+  filter: drop-shadow(0 24px 80px rgba(255,105,0,.25));
+  transform: translateY(6px);
+}
+
+/* badges finos */
+.badge-dot{
+  position: relative;
+  padding-left: 14px;
+}
+.badge-dot::before{
+  content: "";
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 6px; height: 6px; border-radius: 999px;
+  background: var(--lu-accent);
+}
+
+/* ====== placeholder ====== */
+.section-soft{
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--lu-border);
+  padding: 56px 20px;
+}
+.section-title{
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 700; margin-bottom: 8px;
+}
+.section-p{
+  color: var(--lu-subtle);
+  max-width: 70ch;
+}
+
+/* Layout raíz en columna: empuja el footer al final */
+.page-root{
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.content-wrap{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto; 
+}
+
+/* Footer estilo section, todo abajo */
+.footer-soft {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--lu-border);
+  padding: 56px 20px;
+  width: 100%;     
+}
+
+/* Reutilizamos .nav-link para botones de texto (Logout) */
+.nav-link{
+  color: var(--lu-subtle);
+  font-weight: 600;
+  letter-spacing: .02em;
+  transition: color .2s ease, opacity .2s ease;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.nav-link:hover{ color: var(--lu-text); }
+
+/* Opcional: reduce min-width de btn-outline para CTA del header */
+:root { --send-w: 110px; }
+
+/* Headings con Sora */
+h1, h2, .hero-title {
+  font-family: var(--font-sora), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+}
